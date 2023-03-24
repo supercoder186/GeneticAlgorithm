@@ -1,5 +1,5 @@
 class Brain {
-  PVector[] directions;//series of vectors which get the dot to the goal (hopefully)
+  PVector[] directions; //series of accelaration vectors which tell the dot how to move
   int step = 0;
 
 
@@ -8,17 +8,15 @@ class Brain {
     randomize();
   }
 
-  //--------------------------------------------------------------------------------------------------------------------------------
   //sets all the vectors in directions to a random vector with length 1
   void randomize() {
     for (int i = 0; i< directions.length; i++) {
-      float randomAngle = random(2*PI);
+      float randomAngle = random(2 * PI);
       directions[i] = PVector.fromAngle(randomAngle);
     }
   }
 
-  //-------------------------------------------------------------------------------------------------------------------------------------
-  //returns a perfect copy of this brain object
+  //returns a copy of this brain object
   Brain clone() {
     Brain clone = new Brain(directions.length);
     for (int i = 0; i < directions.length; i++) {
@@ -28,12 +26,10 @@ class Brain {
     return clone;
   }
 
-  //----------------------------------------------------------------------------------------------------------------------------------------
-
   //mutates the brain by setting some of the directions to random vectors
   void mutate() {
-    float mutationRate = 0.01;//chance that any vector in directions gets changed
-    for (int i =0; i< directions.length; i++) {
+    float mutationRate = 0.01;
+    for (int i = 0; i< directions.length; i++) {
       float rand = random(1);
       if (rand < mutationRate) {
         //set this direction as a random direction 

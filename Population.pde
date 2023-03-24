@@ -15,8 +15,6 @@ class Population {
     }
   }
 
-
-  //------------------------------------------------------------------------------------------------------------------------------
   //show all dots
   void show() {
     for (int i = 1; i< dots.length; i++) {
@@ -25,7 +23,6 @@ class Population {
     dots[0].show();
   }
 
-  //-------------------------------------------------------------------------------------------------------------------------------
   //update all dots 
   void update() {
     for (int i = 0; i< dots.length; i++) {
@@ -37,7 +34,6 @@ class Population {
     }
   }
 
-  //-----------------------------------------------------------------------------------------------------------------------------------
   //calculate all the fitnesses
   void calculateFitness() {
     for (int i = 0; i< dots.length; i++) {
@@ -46,7 +42,6 @@ class Population {
   }
 
 
-  //------------------------------------------------------------------------------------------------------------------------------------
   //returns whether all the dots are either dead or have reached the goal
   boolean allDotsDead() {
     for (int i = 0; i< dots.length; i++) {
@@ -59,34 +54,27 @@ class Population {
   }
 
 
-
-  //-------------------------------------------------------------------------------------------------------------------------------------
-
   //gets the next generation of dots
   void naturalSelection() {
     Dot[] newDots = new Dot[dots.length];//next gen
-    setBestDot();
     calculateFitnessSum();
-
-    //the champion lives on 
-    newDots[0] = dots[bestDot].gimmeBaby();
-    newDots[0].isBest = true;
-    for (int i = 1; i< newDots.length; i++) {
+    
+    for (int i = 0; i< newDots.length; i++) {
       //select parent based on fitness
       Dot parent = selectParent();
 
       //get baby from them
-      newDots[i] = parent.gimmeBaby();
+      newDots[i] = parent.getChild();
     }
 
     dots = newDots.clone();
     gen ++;
-    println("Gen "+gen+" fitness: "+fitnessSum+" best fitness: "+dots[bestDot].fitness);
+    println("Gen "+gen+" fitness: "+fitnessSum);
   }
 
 
-  //--------------------------------------------------------------------------------------------------------------------------------------
-  //you get it
+  
+  // Calculate the sum of the fitness of all the dots
   void calculateFitnessSum() {
     fitnessSum = 0;
     for (int i = 0; i< dots.length; i++) {
@@ -94,7 +82,6 @@ class Population {
     }
   }
 
-  //-------------------------------------------------------------------------------------------------------------------------------------
 
   //chooses dot from the population to return randomly(considering fitness)
 
@@ -103,12 +90,10 @@ class Population {
   //since dots with a higher fitness function add more to the running sum then they have a higher chance of being chosen
   Dot selectParent() {
     float rand = random(fitnessSum);
-
-
     float runningSum = 0;
 
     for (int i = 0; i< dots.length; i++) {
-      runningSum+= dots[i].fitness;
+      runningSum += dots[i].fitness;
       if (runningSum > rand) {
         return dots[i];
       }
@@ -117,32 +102,10 @@ class Population {
     return null;
   }
 
-  //------------------------------------------------------------------------------------------------------------------------------------------
-  //mutates all the brains of the babies
-  void mutateDemBabies() {
+  //mutates the instruction set of the new generation
+  void mutatePopulation() {
     for (int i = 1; i< dots.length; i++) {
       dots[i].brain.mutate();
-    }
-  }
-
-  //---------------------------------------------------------------------------------------------------------------------------------------------
-  //finds the dot with the highest fitness and sets it as the best dot
-  void setBestDot() {
-    float max = 0;
-    int maxIndex = 0;
-    for (int i = 0; i< dots.length; i++) {
-      if (dots[i].fitness > max) {
-        max = dots[i].fitness;
-        maxIndex = i;
-      }
-    }
-
-    bestDot = maxIndex;
-
-    //if this dot reached the goal then reset the minimum number of steps it takes to get to the goal
-    if (dots[bestDot].reachedGoal) {
-      minStep = dots[bestDot].brain.step;
-      println("step:", minStep);
     }
   }
 }
